@@ -31,19 +31,13 @@ int l_insertar(TLista lista, TPosicion pos, TElemento elem){
     if (lista==NULL)
       exit(LST_NO_INI);
     else {
-      if(pos==NULL) {
-        TCelda nuevacelda = malloc(sizeof(struct celda));
-        nuevacelda->proxima_celda=lista->primer_celda;
-        nuevacelda->elemento=elem;
-        lista->cantidad_elementos++;
-      }
-      else
-      if (lista->cantidad_elementos==0){
-        TCelda nuevacelda = malloc(sizeof(struct celda));
-        nuevacelda->proxima_celda=lista->primer_celda;
-        nuevacelda->elemento=elem;
-        lista->cantidad_elementos++;
-      }
+        if((pos==NULL)||(lista->cantidad_elementos==0)) {
+            TCelda nuevacelda = malloc(sizeof(struct celda));
+            nuevacelda->proxima_celda=lista->primer_celda;
+            nuevacelda->elemento=elem;
+            lista->primer_celda=nuevacelda;
+            lista->cantidad_elementos++;
+        }
         else{
             int i=FALSE;
             TCelda celdaaux = malloc(sizeof(struct celda));
@@ -56,7 +50,6 @@ int l_insertar(TLista lista, TPosicion pos, TElemento elem){
                     nuevacelda->proxima_celda=pos->proxima_celda;
                     lista->cantidad_elementos++;
                     i=TRUE;
-
                 }
                 else
                     celdaaux->proxima_celda=celdaaux->proxima_celda->proxima_celda;
@@ -74,26 +67,22 @@ int l_eliminar(TLista lista, TPosicion pos){
     if(lista->cantidad_elementos==0){
         printf("a");
         exit(LST_VAC);
-        }
+    }
     if (pos==NULL){
-    printf("b");
+        printf("b");
         exit(POS_NULA);
-        }
+    }
     else {
-        TPosicion a_eliminar=l_primera(lista);
+        TCelda a_eliminar= malloc(sizeof(struct celda));
+        a_eliminar->proxima_celda=lista->primer_celda;
         printf("a");
         int i=FALSE;
         while (i==FALSE){
-            if(a_eliminar->proxima_celda==pos->proxima_celda){
-                TPosicion aux=a_eliminar->proxima_celda;
-                printf("b");
-                a_eliminar->proxima_celda=a_eliminar->proxima_celda->proxima_celda;
-                printf("c");
-                aux->elemento=NULL;
-                printf("d");
+            if(a_eliminar->proxima_celda==pos){
+                TCelda celdaaux = a_eliminar->proxima_celda;
+                a_eliminar->proxima_celda=celdaaux->proxima_celda;
+                free(celdaaux);
                 lista->cantidad_elementos--;
-                free(a_eliminar);
-                free(aux);
                 i=TRUE;
             }
             else a_eliminar=l_siguiente(lista,a_eliminar);
