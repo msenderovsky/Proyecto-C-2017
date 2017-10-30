@@ -28,6 +28,7 @@ TLista lista_crear() {
 //Agrega el elemento elem en la posición anterior a pos, dentro de la lista.
 int l_insertar(TLista lista, TPosicion pos, TElemento elem){
 
+    int i=FALSE;
     if (lista==NULL)
       exit(LST_NO_INI);
     else {
@@ -39,19 +40,21 @@ int l_insertar(TLista lista, TPosicion pos, TElemento elem){
             lista->cantidad_elementos++;
         }
         else{
-            int i=FALSE;
-            TCelda celdaaux = malloc(sizeof(struct celda));
-            celdaaux->proxima_celda=lista->primer_celda;
+            TPosicion celdaaux=l_primera(lista);
             while (i==FALSE){
-                if (celdaaux->proxima_celda==pos){
+                if (celdaaux==pos){
                     TCelda nuevacelda = malloc(sizeof(struct celda));
+                    printf("paso 1 \n");
                     celdaaux->proxima_celda=nuevacelda;
+                    printf("paso 2 \n");
                     nuevacelda->elemento=elem;
-                    nuevacelda->proxima_celda=pos;
+                    printf("paso 3 \n");
+                    nuevacelda->proxima_celda=pos->proxima_celda;
+                    printf("voy a incrementar el tamaño de L \n");
                     lista->cantidad_elementos++;
+                    i=TRUE;
                     if (lista->primer_celda==pos)
                         lista->primer_celda=nuevacelda;
-                    i=TRUE;
                 }
                 else
                     celdaaux->proxima_celda=celdaaux->proxima_celda->proxima_celda;
@@ -65,32 +68,38 @@ int l_insertar(TLista lista, TPosicion pos, TElemento elem){
 //Si la posicion pasada nula, finaliza la ejecucion con error LST_POS_INV
 int l_eliminar(TLista lista, TPosicion pos){
 
-    printf("aaaa");
+    int i=FALSE;
+    printf("entre al eliminar \n");
     if(lista->cantidad_elementos==0){
-        printf("a");
+        printf("quiero eliminar con lista vacia \n");
         exit(LST_VAC);
     }
     if (pos==NULL){
-        printf("b");
+        printf("quiero eliminar una pos nula \n");
         exit(POS_NULA);
     }
     else {
-        TCelda a_eliminar= malloc(sizeof(struct celda));
-        a_eliminar->proxima_celda=lista->primer_celda;
-        printf("a");
-        int i=FALSE;
+        TPosicion a_eliminar=l_primera(lista);
+        printf("estoy borrando \n");
         while (i==FALSE){
-            if(a_eliminar->proxima_celda==pos){
-                TCelda celdaaux = a_eliminar->proxima_celda;
-                a_eliminar->proxima_celda=celdaaux->proxima_celda;
-                free(celdaaux);
+            printf("asd\n");
+            if(a_eliminar==pos){
+                printf("entre al if de borrar\n");
+                TPosicion celdaaux = l_anterior(lista,a_eliminar);
+                printf("declaro nueva pos\n");
+                celdaaux->proxima_celda=a_eliminar->proxima_celda;
+                printf("modifico celda\n");
+                free(a_eliminar);
+                printf("hice free\n");
                 lista->cantidad_elementos--;
+                printf("la lista tiene ahora %i elementos\n", lista_cantidad(lista));
                 i=TRUE;
             }
             else a_eliminar=l_siguiente(lista,a_eliminar);
         }
     }
-    return TRUE;
+    printf("sali del eliminar con %i \n", i);
+    return i;
 }
 
 // Retorna la primer posición de la lista.
@@ -100,8 +109,7 @@ TPosicion l_primera(TLista lista){
 
 // Retorna la última posición de la lista.
 TPosicion l_ultima(TLista lista){
-    TCelda pos;
-    pos->proxima_celda=lista->primer_celda;
+    TCelda pos=l_primera(lista);
     int i=FALSE;
     while (i==FALSE){
         if (pos->proxima_celda==NULL)

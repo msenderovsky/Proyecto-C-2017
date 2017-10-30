@@ -33,6 +33,8 @@ TListaOrdenada crear_lista_ordenada(int (*f) (void *, void *)){
  * Si la lista esta vacia lo inserto en el principio
  */
 int lo_insertar (TListaOrdenada lista, TElemento elem){
+
+    int i=FALSE;
 	if (lista==NULL)
 		exit((int)LST_POS_INV);
 	if (lista->cantidad_elementos==0){
@@ -41,42 +43,36 @@ int lo_insertar (TListaOrdenada lista, TElemento elem){
         lista->cantidad_elementos++;
     }
 	else{
-        TPosicion n= (TPosicion) malloc (sizeof(struct celda));
-        n->elemento=elem;
-		TPosicion muevo=(TPosicion) malloc (sizeof(struct celda));
-		muevo->proxima_celda=lista->lista->primer_celda;
-		int i=FALSE;
-		while ((muevo->proxima_celda!=NULL)&&(i==FALSE)){
-            printf("entro al while, y muevo vale %c: \n", muevo->proxima_celda->elemento);
-            printf("N vale \n", n->elemento);
-            if (comp(n, muevo->proxima_celda)<1){
-                printf("%c es menor a %c", n->elemento,muevo->elemento);
-                l_insertar(lista->lista,muevo,elem);
+        TPosicion muevo=lo_primera(lista);
+		while ((muevo!=lo_ultima(lista))&&(i==FALSE)){
+            printf("entro al while, y muevo vale %c \n", muevo->proxima_celda->elemento);
+            if (comp(elem, muevo->proxima_celda->elemento)<1){
+                printf("entre al if de insertar \n");
+                l_insertar(lista->lista,muevo->proxima_celda,elem);
+                printf("inserte \n");
                 lista->cantidad_elementos++;
                 i=TRUE;
             }
             else{
                 printf("avanzo con muevo \n");
-                muevo->proxima_celda=muevo->proxima_celda->proxima_celda;
+                muevo=lo_siguiente(lista,muevo);
             }
         }
         printf("sali del while \n");
         if (i==FALSE){
-            printf("A \n");
-            printf("asdad %c \n", l_ultima(lista->lista)->elemento);
-            l_insertar(lista->lista,l_ultima(lista->lista),elem);
-            printf("muevo vale %c \n", muevo->proxima_celda->elemento);
-            TElemento e=muevo->elemento;
-            printf("C \n");
-            l_eliminar(lista->lista,muevo->proxima_celda);
-            printf("D \n");
-            l_insertar(lista->lista,muevo,e);
-            printf("E \n");
+            printf("quiero insertar un 2 antes de un 1 \n");
+            TCelda nuevacelda= (TCelda)malloc(sizeof(struct celda));
+            printf("a \n");
+            nuevacelda->elemento=elem;
+            printf("b \n");
+            l_ultima(lista->lista)->proxima_celda=nuevacelda;
+            printf("c \n");
+            nuevacelda->proxima_celda=NULL;
             lista->cantidad_elementos++;
+            lista->lista->cantidad_elementos++;
         }
-
 	}
-	return TRUE;
+	return i;
 }
 
 /**
@@ -92,9 +88,12 @@ int lo_eliminar(TListaOrdenada lista, TPosicion pos){
 		res=FALSE;
     else{
         l_eliminar(lista->lista,pos);
-        res=TRUE;
+        printf("estoy en el eliminar de LO \n");
         lista->cantidad_elementos--;
+        printf("la lo tiene ahora %i elementos\n", lista->cantidad_elementos);
+        res=TRUE;
 	}
+	printf("sali del eliminar de L");
 	return res;
 }
 
