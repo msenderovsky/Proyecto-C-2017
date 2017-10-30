@@ -9,7 +9,7 @@
 
 1509398621 /home/alumno/Proyecto-C-2017/ListaOrdenada.h
 
-1509398621 source:/home/alumno/Proyecto-C-2017/tester.c
+1509401621 source:/home/alumno/Proyecto-C-2017/tester.c
 	<stdio.h>
 	<stdlib.h>
 	"lista.h"
@@ -18,7 +18,7 @@
 
 1509398621 /home/alumno/Proyecto-C-2017/trie.h
 
-1509398621 source:/home/alumno/Proyecto-C-2017/trie.c
+1509401031 source:/home/alumno/Proyecto-C-2017/trie.c
 	<stdio.h>
 	<stdlib.h>
 	"lista.h"
@@ -30,4 +30,11 @@
 	<stdio.h>
 	<stdlib.h>
 	"lista.h"
+
+1509402340 source:/home/alumno/Proyecto-C-2017/evaluador.c
+	<stdio.h>
+	<stdlib.h>
+	"lista.h"
+	"ListaOrdenada.h"
+	"trie.h"
 

@@ -39,7 +39,7 @@ int h(void *e1,void *e2){
 	return comp;
 }
 
-int main()
+/*int main()
 {
     //TTrie t=crear_trie();
     TListaOrdenada l= crear_lista_ordenada(g);
@@ -85,11 +85,11 @@ int main()
     printf ("inserte un 3 \n");
     printf("cantidad de elementos: %i\n", lista_cantidad(l));
     printf("1er valor es: %c\n", l_primera(l)->elemento);
-    printf("2do valor es: %c\n", l_ultima(l)->elemento);*/
+    printf("2do valor es: %c\n", l_ultima(l)->elemento);
    // printf("voy a borrar:\n");
     //l_eliminar(l,l_primera(l));
    // printf("borro \n");
    // printf("cantidad en lista: %i\n", lista_cantidad(l));
     return 0;
 
-}
+}*/

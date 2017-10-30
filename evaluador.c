@@ -19,13 +19,6 @@ const int POS_NULA=NULL;
 const int ELE_NULO=NULL;
 const int max=49;
 
-//Muestra las palabras del Trie sin repetirlas
-void mostrar_palabras(TTrie tr){
-
-	char* str [max+1];
-	mostrar_aux( str, tr, lo_primera(tr->raiz->hijos),0 );
-}
-
 void mostrar_aux(char* str, TTrie tr, TNodo n, int i){
 
 	if (i< max){
@@ -36,44 +29,58 @@ void mostrar_aux(char* str, TTrie tr, TNodo n, int i){
 			printf("%s\n",str);
 		}
 		//
+		TPosicion pos;
 		TNodo aux;
-		for (aux=lo_primera(n->hijos); aux!=NULL; aux=lo_siguiente(n->hijos, aux))
+		for (pos=lo_primera(n->hijos); aux!=NULL; pos=lo_siguiente(n->hijos, pos)){
+            aux=pos->elemento;
 			mostrar_aux( str,tr, aux,i+1);
+			}
     }
 }
+
+//Muestra las palabras del Trie sin repetirlas
+void mostrar_palabras(TTrie tr){
+
+	char str [max+1];
+	mostrar_aux( str, tr, lo_primera(tr->raiz->hijos)->elemento,0 );
+}
+
 //Retorna cuantas veces esta una palabra pasada por parametro en el archivo, si es que la encuentra
 int consultar(TTrie tr,char* str){
 
 	int c=FALSE;
-	if (tr_pertenece(tr,*str)==TRUE)
-		c=tr_recuperar(tr,*str);
+	if (tr_pertenece(tr,str)==TRUE)
+		c=tr_recuperar(tr,str);
 	return c;
+}
+
+int comienza_aux(char* str, TTrie tr, TNodo n){
+
+		TPosicion pos;
+		for (pos=lo_primera(n->hijos); pos!=NULL; pos=lo_siguiente(n->hijos, pos))
+			if (n->contador!=0)
+				return 1+comienza_aux(str,tr, pos->elemento);
+			else return comienza_aux(str,tr, pos->elemento);
 }
 
 //Retorna cuantas palabras comienzan con la letra pasada por parametro
 //Si no hay palabras que comiencen con esa letra retorna error
 int comienzan_con(TTrie tr,char* str){
-
-	TNodo recorro=lo_primera(tr->raiz->hijos);
+    TNodo elem;
+	TPosicion recorro=lo_primera(tr->raiz->hijos);
 	char s=str[0];
 	int encontre=FALSE;
-	while ((encontre==FALSE)&&(recorro!=NULL))
-		if (recorro->rotulo==s)
+	while ((encontre==FALSE)&&(recorro!=NULL)) {
+        elem = recorro->elemento;
+        char y = elem->rotulo;
+		if (y==s)
 			encontre=TRUE;
 		else recorro=lo_siguiente(tr->raiz->hijos, recorro);
+		}
 	int i=0;
 	if (encontre==TRUE)
-		i=comienza_aux(tr, lo_primera(recorro->hijos) );
+		i=comienza_aux(str, tr, lo_primera(elem->hijos)->elemento);
 	return i;
-}
-
-int comienza_aux(char* str, TTrie tr, TNodo n){
-
-		TNodo aux;
-		for (aux=lo_primera(n->hijos); aux!=NULL; aux=lo_siguiente(n->hijos, aux))
-			if (n->contador!=0)
-				return 1+comienza_aux(str,tr, aux);
-			else return comienza_aux(str,tr, aux);
 }
 
 //Retorna verdadero si una palabra es prefijo de al menos otra palabra, falso en caso contrario
@@ -83,8 +90,8 @@ int es_prefijo(TTrie tr,char* str){
 		exit (TRI_NO_INI);
 	int i=FALSE;
 	if (tr_recuperar(tr,str)>0)
-		i==TRUE;
-	else i==FALSE;
+		i=TRUE;
+	else i=FALSE;
 	return i;
 }
 
@@ -106,11 +113,11 @@ void cargar(char* file, TTrie tr){
 	if (archivo == NULL)
             printf("\n Error de apertura del archivo. \n\n");
         else{
-				while((caracter = fgetc(archivo)) != EOF){
+				while(fgetc(archivo) != EOF){
 					caracter = fgetc(archivo);
 					char c = caracter;
 					if(((c >='a')&&(c <='z'))||((c >='A')&&(c <='Z'))){
-						s[a]=(char)c;
+						s[a]=c;
 						a++;
 					}
 					else{
@@ -125,7 +132,7 @@ void cargar(char* file, TTrie tr){
 
 void destruir (TTrie tr){
 
-	tr_destruir(tr);
+	//tr_destruir(tr);
 }
 
 int main (int argc, char *argv[] ){
@@ -145,30 +152,30 @@ int main (int argc, char *argv[] ){
 				mostrar_palabras(tr);
 				break;
 			case '2' :
-				while (c=!'\0'){
+				while (c!='\0'){
 					scanf("%c",c);
-					palabra[i++]=c;
+					palabra[i++]=(char)c;
 				}
 				printf("%i\n", consultar(tr,palabra));
 				break;
 			case '3' :
 				while (c!='\0'){
 					scanf("%c",c);
-					palabra[i++]=c;
+					palabra[i++]=(char)c;
 				}
-				printf("%i\n", comienza_con(tr,palabra));
+				printf("%i\n", comienzan_con(tr,palabra));
 				break;
 			case '4' :
 				while (c!='\0'){
 					scanf("%c",c);
-					palabra[i++]=c;
+					palabra[i++]=(char)c;
 				}
 				printf("%i\n", es_prefijo(tr,palabra));
 				break;
 			case '5' :
 				while (c!='\0'){
 					scanf("%c",c);
-					palabra[i++]=c;
+					palabra[i++]=(char)c;
 				}
 				printf("%f\n", porcentaje(tr,palabra));
 				break;
