@@ -1,0 +1,33 @@
+# depslib dependency file v1.0
+1509400844 source:/home/alumno/Proyecto-C-2017/ListaOrdenada.c
+	<stdio.h>
+	<stdlib.h>
+	"lista.h"
+	"ListaOrdenada.h"
+
+1509400929 /home/alumno/Proyecto-C-2017/lista.h
+
+1509398621 /home/alumno/Proyecto-C-2017/ListaOrdenada.h
+
+1509398621 source:/home/alumno/Proyecto-C-2017/tester.c
+	<stdio.h>
+	<stdlib.h>
+	"lista.h"
+	"ListaOrdenada.h"
+	"trie.h"
+
+1509398621 /home/alumno/Proyecto-C-2017/trie.h
+
+1509398621 source:/home/alumno/Proyecto-C-2017/trie.c
+	<stdio.h>
+	<stdlib.h>
+	"lista.h"
+	"ListaOrdenada.h"
+	"trie.h"
+	<string.h>
+
+1509400778 source:/home/alumno/Proyecto-C-2017/lista.c
+	<stdio.h>
+	<stdlib.h>
+	"lista.h"
+

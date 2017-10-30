@@ -52,7 +52,7 @@ TElemento l_recuperar(TLista lista, TPosicion pos);
 //Si la lista no esta inicializada finaliza la ejecucion con error LST_NO_INI
 int lista_cantidad(TLista lista);
 
-
+void l_destruir();
 
 
 #endif /* LISTA_H_ */
