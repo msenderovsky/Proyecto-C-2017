@@ -35,14 +35,14 @@ int main()
     printf("tamaño es: %i\n", l->cantidad_elementos);
     //printf("asdad");
     printf("voy a insertar el primer elemento, el '2' \n");
-    lo_insertar(l,'1');
+    lo_insertar(l,'2');
     printf("tamaño es: %i\n", l->cantidad_elementos);
     //printf("asdad2");
     //tr_pertenece(l,'a');
-    printf("primer valor es: %c\n", lo_primera(l)->elemento);
-    printf("ultimo valor es: %c\n", lo_primera(l)->elemento);
+    printf("primer valor es (lo_primera) : %c\n", lo_primera(l)->elemento);
+    printf("ultimo valor es (lo_ultima): %c\n", lo_ultima(l)->elemento);
     printf("voy a insertar el segundo elemento, el '1' \n");
-    lo_insertar(l,'2');
+    lo_insertar(l,'1');
     printf("tamaño es: %i\n", l->cantidad_elementos);
 
     printf("primer valor es: %c\n", lo_primera(l)->elemento);
@@ -50,8 +50,8 @@ int main()
     printf("segundo valor es: %c\n", lo_ultima(l)->elemento);
     //printf("%i",lo_eliminar(l,lo_primera(l)));
     //printf(f(1,2));
-    printf("asdasd\n");
-//    printf("%i\n", l->cantidad_elementos);
+    //printf("asdasd\n");
+    //printf("%i\n", l->cantidad_elementos);
     // printf("asdad3");
     //printf("asdad4");
     /*TLista l= lista_crear();

@@ -43,24 +43,35 @@ int lo_insertar (TListaOrdenada lista, TElemento elem){
 	else{
         TPosicion n= (TPosicion) malloc (sizeof(struct celda));
         n->elemento=elem;
-		TPosicion muevo=l_primera(lista->lista);
+		TPosicion muevo=(TPosicion) malloc (sizeof(struct celda));
+		muevo->proxima_celda=lista->lista->primer_celda;
 		int i=FALSE;
-		while ((muevo!=NULL)&&(i==FALSE)){
-            printf("entro al while, aun no encontre \n");
-            if (comp(n, muevo)<1){
+		while ((muevo->proxima_celda!=NULL)&&(i==FALSE)){
+            printf("entro al while, y muevo vale %c: \n", muevo->proxima_celda->elemento);
+            printf("N vale \n", n->elemento);
+            if (comp(n, muevo->proxima_celda)<1){
                 printf("%c es menor a %c", n->elemento,muevo->elemento);
                 l_insertar(lista->lista,muevo,elem);
                 lista->cantidad_elementos++;
                 i=TRUE;
             }
-            else
-                muevo=l_siguiente(lista->lista,muevo);
+            else{
+                printf("avanzo con muevo \n");
+                muevo->proxima_celda=muevo->proxima_celda->proxima_celda;
+            }
         }
-        if ((i==FALSE)&&(muevo==NULL)){
-            l_insertar(lista->lista,muevo,elem);
-            TElemento e=muevo->proxima_celda->elemento;
+        printf("sali del while \n");
+        if (i==FALSE){
+            printf("A \n");
+            printf("asdad %c \n", l_ultima(lista->lista)->elemento);
+            l_insertar(lista->lista,l_ultima(lista->lista),elem);
+            printf("muevo vale %c \n", muevo->proxima_celda->elemento);
+            TElemento e=muevo->elemento;
+            printf("C \n");
             l_eliminar(lista->lista,muevo->proxima_celda);
+            printf("D \n");
             l_insertar(lista->lista,muevo,e);
+            printf("E \n");
             lista->cantidad_elementos++;
         }
 
