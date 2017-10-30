@@ -75,7 +75,7 @@ int l_eliminar(TLista lista, TPosicion pos){
         exit(LST_VAC);
     }
     if (pos==NULL){
-        printf("quiero eliminar una pos nula \n");
+        printf("quiero elar una pos nula \n");
         exit(POS_NULA);
     }
     else {
