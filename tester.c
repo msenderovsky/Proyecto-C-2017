@@ -4,7 +4,7 @@
 #include "ListaOrdenada.h"
 #include "trie.h"
 
-/*int g(void *e1,void *e2){
+int g(void *e1,void *e2){
     TPosicion a = (TPosicion) e1;
 	TPosicion b = (TPosicion) e2;
 	int comp;
@@ -14,9 +14,9 @@
 		comp=0;
             else comp=1;
 	return comp;
-}*/
+}
 
-int g(void *e1,void *e2){
+int h(void *e1,void *e2){
 	TNodo a = (TNodo) e1;
 	TNodo b = (TNodo) e2;
 	int comp;
@@ -31,24 +31,30 @@ int g(void *e1,void *e2){
 int main()
 {
     //TTrie t=crear_trie();
-    /*
     TListaOrdenada l= crear_lista_ordenada(g);
     printf("tamaño es: %i\n", l->cantidad_elementos);
     //printf("asdad");
-   lo_insertar(l,'2');
+    printf("voy a insertar el primer elemento, el '2' \n");
+    lo_insertar(l,'1');
     printf("tamaño es: %i\n", l->cantidad_elementos);
-    printf("primer valor es: %i\n", lo_primera(l));*/
     //printf("asdad2");
     //tr_pertenece(l,'a');
-    //lo_eliminar(l,lo_primera(l));
-   // lo_insertar(l, 1);
+    printf("primer valor es: %c\n", lo_primera(l)->elemento);
+    printf("ultimo valor es: %c\n", lo_primera(l)->elemento);
+    printf("voy a insertar el segundo elemento, el '1' \n");
+    lo_insertar(l,'2');
+    printf("tamaño es: %i\n", l->cantidad_elementos);
+
+    printf("primer valor es: %c\n", lo_primera(l)->elemento);
+    printf("1er valor es: %c\n", l->lista->primer_celda->elemento);
+    printf("segundo valor es: %c\n", lo_ultima(l)->elemento);
     //printf("%i",lo_eliminar(l,lo_primera(l)));
     //printf(f(1,2));
     printf("asdasd\n");
 //    printf("%i\n", l->cantidad_elementos);
     // printf("asdad3");
     //printf("asdad4");
-    TLista l= lista_crear();
+    /*TLista l= lista_crear();
     printf("acabo de crear y voy a insertar \n");
     printf("%i\n", lista_cantidad(l));
     l_insertar(l,l_primera(l),'2');
@@ -57,11 +63,16 @@ int main()
     printf("cantidad de elementos: %i\n", lista_cantidad(l));
     //l_insertar(l,l_primera(l),2);
     printf ("inserte uno \n");
-    printf("nada %i\n", lista_cantidad(l));
+    printf("el primer valor es %c \n", l_primera(l)->elemento);
+    l_insertar(l,l_primera(l),'3');
+    printf ("inserte un 3 \n");
+    printf("cantidad de elementos: %i\n", lista_cantidad(l));
+    printf("1er valor es: %c\n", l_primera(l)->elemento);
+    printf("2do valor es: %c\n", l_ultima(l)->elemento);
     printf("voy a borrar:\n");
     l_eliminar(l,l_primera(l));
-    printf("termo\n");
-    printf("%i\n", lista_cantidad(l));
+    printf("borro \n");
+    printf("cantidad en lista: %i\n", lista_cantidad(l));*/
     return 0;
 
 }

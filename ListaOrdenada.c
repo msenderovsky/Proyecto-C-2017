@@ -36,6 +36,7 @@ int lo_insertar (TListaOrdenada lista, TElemento elem){
 	if (lista==NULL)
 		exit((int)LST_POS_INV);
 	if (lista->cantidad_elementos==0){
+        printf("lista vacia \n");
 		l_insertar(lista->lista,l_primera(lista->lista),elem);
         lista->cantidad_elementos++;
     }
@@ -45,7 +46,9 @@ int lo_insertar (TListaOrdenada lista, TElemento elem){
 		TPosicion muevo=l_primera(lista->lista);
 		int i=FALSE;
 		while ((muevo!=NULL)&&(i==FALSE)){
+            printf("entro al while, aun no encontre \n");
             if (comp(n, muevo)<1){
+                printf("%c es menor a %c", n->elemento,muevo->elemento);
                 l_insertar(lista->lista,muevo,elem);
                 lista->cantidad_elementos++;
                 i=TRUE;

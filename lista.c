@@ -43,12 +43,14 @@ int l_insertar(TLista lista, TPosicion pos, TElemento elem){
             TCelda celdaaux = malloc(sizeof(struct celda));
             celdaaux->proxima_celda=lista->primer_celda;
             while (i==FALSE){
-                if (celdaaux->proxima_celda==pos->proxima_celda){
+                if (celdaaux->proxima_celda==pos){
                     TCelda nuevacelda = malloc(sizeof(struct celda));
                     celdaaux->proxima_celda=nuevacelda;
                     nuevacelda->elemento=elem;
-                    nuevacelda->proxima_celda=pos->proxima_celda;
+                    nuevacelda->proxima_celda=pos;
                     lista->cantidad_elementos++;
+                    if (lista->primer_celda==pos)
+                        lista->primer_celda=nuevacelda;
                     i=TRUE;
                 }
                 else
@@ -98,14 +100,13 @@ TPosicion l_primera(TLista lista){
 
 // Retorna la última posición de la lista.
 TPosicion l_ultima(TLista lista){
-    TPosicion pos;
-    pos=lista->primer_celda;
+    TCelda pos;
+    pos->proxima_celda=lista->primer_celda;
     int i=FALSE;
     while (i==FALSE){
-        if (pos->proxima_celda==NULL){
+        if (pos->proxima_celda==NULL)
             i=TRUE;
-            pos->proxima_celda=pos->proxima_celda->proxima_celda;
-        }
+        else pos=l_siguiente(lista,pos);
     }
     return pos;
 }
