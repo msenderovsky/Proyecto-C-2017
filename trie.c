@@ -17,6 +17,7 @@
 #define POS_NULA NULL
 #define ELE_NULO NULL
 
+//Comparador de TNodos.
 int f(void *e1,void *e2){
 	TNodo a = (TNodo) e1;
 	TNodo b = (TNodo) e2;
@@ -40,11 +41,57 @@ TTrie crear_trie(){
     nuevo->raiz=raiz;
     raiz->contador=0;
     raiz->padre=NULL;
-    raiz->rotulo=NULL;
+    raiz->rotulo='\0';
     raiz->hijos=crear_lista_ordenada(f);
     return nuevo;
 }
 
+/**
+ * \param  Letra a buscar
+ * \param  La lista donde se debe buscar la letra
+ * \return La posición donde se encuentra la letra
+ */
+
+    TPosicion buscar_letra(TListaOrdenada lista, char letra ){
+        int encontre=FALSE;
+        TPosicion buscar = lo_primera(lista);
+        //BUsco en la lista la letra pasada por parámetro
+        while (encontre!=TRUE && buscar!=NULL){
+         TNodo elemento = buscar->elemento;
+            if (elemento->rotulo==letra)
+            encontre=TRUE;
+        else
+        //SI no la encuentro, sigo recorriendo
+            if (buscar!=lo_ultima(lista))
+            buscar=lo_siguiente(lista,buscar);
+            }
+        return buscar;
+        }
+
+    //Método auxiliar para recorrer el trie insertando cada nodo.
+    int insert_aux(char*palabra,int i, int n, TNodo raiz){
+        TNodo padre = buscar_letra(raiz->hijos,palabra[i])->elemento;
+        if (i<n){
+              //Busco si la letra se encuentra en la lista de hijos
+            if (padre!=NULL)
+                raiz=padre;
+                else{
+                //Si no está en la lista de hijos, creo un nodo nuevo y lo agrego al trie
+                    TNodo nuevo = (TNodo)malloc(sizeof(struct nodo));
+                    nuevo->rotulo=palabra[i];
+                    nuevo->contador=0;
+                    nuevo->padre=raiz;
+                    nuevo->hijos=crear_lista_ordenada(f);
+                    lo_insertar(padre->hijos,nuevo);
+                    raiz=nuevo;
+                    insert_aux(palabra,i+1,n,raiz);
+                }
+            }
+            else
+                raiz->contador++;
+
+return TRUE;
+}
 
 /**
 * Inserta una palabra en el trie en la posicion correspondiente.
@@ -56,55 +103,26 @@ int tr_insertar(TTrie tr, char* str){
     if(tr == NULL)
         exit(TRI_NO_INI);
     if (str==NULL)
-        res=STR_NO_PER;
+        res=FALSE;
     tr->cantidad_elementos++;
     res=insert_aux(str,0,strlen(str),tr->raiz);
     return res;
     }
-/**
- * \param  Letra a buscar
- * \param  La lista donde se debe buscar la letra
- * \return La posición donde se encuentra la letra
- */
 
-    TPosicion buscar_letra(TListaOrdenada lista, char letra ){
-        int res=FALSE;
-        TPosicion buscar = lo_primera(lista);
-        while (res!=TRUE && buscar!=NULL){
-         TNodo elemento = buscar->elemento;
-            if (elemento->rotulo==letra)
-            res=TRUE;
-        else
-            if (buscar!=lo_ultima(lista))
-            buscar=lo_siguiente(lista,buscar);
+
+
+int pertenece_aux(TNodo padre,char*palabra,int inicio, int fin){
+    int resultado=TRUE;
+    if (inicio<=fin && resultado==TRUE){
+        TPosicion busca=buscar_letra(padre->hijos,palabra[inicio]);
+        TNodo hijo = l_recuperar(padre->hijos->lista,busca);
+        if (busca!=NULL)
+            resultado=pertenece_aux(hijo,palabra,inicio+1,fin);
+             else
+                resultado=STR_NO_PER;
             }
-        return buscar;
-        }
-
-     int insert_aux(char*palabra,int i, int n, TNodo raiz){
-        if (i<n){
-              //Busco si la letra se encuentra en la lista de hijos
-              TNodo padre = buscar_letra(padre->hijos,palabra[i])->elemento;
-              if (padre!=NULL)
-                raiz=padre;
-                else{
-                //Si no está en la lista de hijos, creo un nodo nuevo y lo agrego al trie
-                    TNodo nuevo = (TNodo)malloc(sizeof(struct nodo));
-                    nuevo->rotulo=palabra[i];
-                    nuevo->contador=0;
-                    nuevo->padre=raiz;
-                    nuevo->hijos=crear_lista_ordenada(f);
-                    lo_insertar(padre->hijos,nuevo);
-                    raiz=nuevo;
-                }
-            }
-            else
-                raiz->contador++;
-        insert_aux(palabra,i+1,n,raiz);
-return TRUE;
-}
-
-
+    return resultado;
+    }
 
 
 /**
@@ -116,23 +134,12 @@ int tr_pertenece (TTrie tr, char* str)
 {
 	if (tr==NULL)
 		exit(TRI_NO_INI);
-    if(str!=NULL)
+
 
 return pertenece_aux(tr->raiz,str,0,strlen(str));
 }
 
-int pertenece_aux (TNodo padre,char*palabra,int inicio, int fin){
-    int resultado=TRUE;
-    if (inicio<=fin && resultado==TRUE){
-        TPosicion busca=buscar_letra(padre->hijos,palabra[inicio]);
-        TNodo hijo = l_recuperar(padre->hijos->lista,busca);
-        if (busca!=NULL)
-            resultado=pertenece_aux(hijo,palabra,inicio+1,fin);
-             else
-                resultado=STR_NO_PER;
-            }
-            return resultado;
-    }
+
 
 /**
 * Retorna la cantidad de veces que esta un string pasado por parametro
@@ -168,6 +175,19 @@ int tr_size(TTrie tr){
     return tr->cantidad_elementos;
     }
 
+//Metodo auxiliar recursivo para eliminar un string
+int tr_eliminar_aux(TTrie trie, char*palabra,int inicio,int fin ,TNodo padre){
+    if (inicio<fin){
+        TPosicion a_eliminar=buscar_letra(padre->hijos,palabra[inicio]);
+        TNodo padre_nuevo=a_eliminar->elemento;
+        if (padre_nuevo->contador>1)
+            padre_nuevo->contador--;
+    else
+        lo_eliminar(padre->hijos,a_eliminar);
+    tr_eliminar_aux(trie,palabra,inicio+1,fin,padre_nuevo);}
+return TRUE;
+}
+
 //Elimina el string str dentro del trie, liberando la memoria utilizada.
 //Retorna verdadero en caso de operación exitosa, y falso en caso contrario.
 int tr_eliminar(TTrie tr, char* str){
@@ -175,20 +195,12 @@ int tr_eliminar(TTrie tr, char* str){
     if (tr==NULL)
 		exit(TRI_NO_INI);
 		else
-            if (tr_pertenece(tr,str)!=FALSE)
+            if (tr_pertenece(tr,str)!=FALSE){
             resultado=tr_eliminar_aux(tr,str,0,strlen(str),tr->raiz);
+            tr->cantidad_elementos--;}
     return resultado;
 		}
 
-int tr_eliminar_aux(TTrie trie, char*palabra,int inicio,int fin ,TNodo padre){
-    if (inicio<fin){
-    TPosicion a_eliminar=buscar_letra(padre->hijos,palabra[inicio]);
-    TNodo padre_nuevo=a_eliminar->elemento;
-    if (padre_nuevo->contador<1)
-        padre_nuevo->contador--;
-    else
-    lo_eliminar(padre->hijos,a_eliminar);
-    tr_eliminar_aux(trie,palabra,inicio+1,fin,padre_nuevo);}
-return TRUE;
-}
+
+
 
