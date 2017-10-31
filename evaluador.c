@@ -8,15 +8,16 @@
 #define NULL   ((void *) 0)
 #endif
 
-const char FALSE=0;
-const char TRUE=1;
-const int LST_NO_INI=2;
-const int LST_POS_INV=3;
-const int LST_VAC=4;
-const int TRI_NO_INI=5;
-const int STR_NO_PER=-1;
-const int POS_NULA=NULL;
-const int ELE_NULO=NULL;
+#define FALSE 0
+#define TRUE 1
+#define LST_NO_INI 2
+#define LST_POS_INV 3
+#define LST_VAC 4
+#define TRI_NO_INI 5
+#define STR_NO_PER -1
+#define POS_NULA NULL
+#define ELE_NULO NULL
+
 const int max=49;
 
 void mostrar_aux(char* str, TTrie tr, TNodo n, int i){
@@ -46,7 +47,7 @@ void mostrar_palabras(TTrie tr){
 }
 
 //Retorna cuantas veces esta una palabra pasada por parametro en el archivo, si es que la encuentra
-int consultar(TTrie tr,char* str){
+int consultar(TTrie tr,char*str){
 
 	int c=FALSE;
 	if (tr_pertenece(tr,str)==TRUE)
@@ -55,12 +56,14 @@ int consultar(TTrie tr,char* str){
 }
 
 int comienza_aux(char* str, TTrie tr, TNodo n){
-
+    int resultado;
 		TPosicion pos;
 		for (pos=lo_primera(n->hijos); pos!=NULL; pos=lo_siguiente(n->hijos, pos))
 			if (n->contador!=0)
-				return 1+comienza_aux(str,tr, pos->elemento);
-			else return comienza_aux(str,tr, pos->elemento);
+				resultado=1+comienza_aux(str,tr, pos->elemento);
+			else
+                resultado=comienza_aux(str,tr, pos->elemento);
+    return resultado;
 }
 
 //Retorna cuantas palabras comienzan con la letra pasada por parametro
@@ -96,7 +99,7 @@ int es_prefijo(TTrie tr,char* str){
 }
 
 //Retorna el porcentaje de palabras que contienen la cadena pasada por parametro como prefijo de ellas
-float porcentaje (TTrie tr,char* str){
+float porcentaje (TTrie tr, char*str){
 
 	if (tr==NULL)
 		exit (TRI_NO_INI);
@@ -107,7 +110,8 @@ void cargar(char* file, TTrie tr){
 
 	FILE *archivo;
 	int caracter;
-	char*  s[100];
+	char string[100];
+	char*s=&string[0];
 	int a=0;
 	archivo = fopen(file,"r");
 	if (archivo == NULL)
@@ -116,14 +120,14 @@ void cargar(char* file, TTrie tr){
 				while(fgetc(archivo) != EOF){
 					caracter = fgetc(archivo);
 					char c = caracter;
-					if(((c >='a')&&(c <='z'))||((c >='A')&&(c <='Z'))){
-						s[a]=c;
+					if(c!=' '){
+						s[a]=(char)c;
 						a++;
 					}
 					else{
 						tr_insertar(tr,s);
-						for (a;a>0;a--)
-							s[a]=NULL;
+						for (int i=a;i>0;i--)
+							s[i]='\0';
 					}
 				}
         }
@@ -138,14 +142,14 @@ void destruir (TTrie tr){
 int main (int argc, char *argv[] ){
 
 	TTrie tr= (TTrie) malloc (sizeof(struct trie));
-	if (argc==2);
+	if (argc==2)
 		cargar (argv[1],tr);
 	printf("Ingrese un numero de operacion\n");
-	int opcion=1;
-	char* palabra [50];
+	char opcion;
+	char palabra[50];
     int i=0;
     char c;
-	scanf("%i",&opcion);
+	scanf("%c",&opcion);
 	while (opcion!='6'){
 		switch(opcion) {
 			case '1' :
@@ -153,39 +157,40 @@ int main (int argc, char *argv[] ){
 				break;
 			case '2' :
 				while (c!='\0'){
-					scanf("%c",c);
-					palabra[i++]=(char)c;
+					scanf("%c",&c);
+					palabra[i++]=c;
 				}
 				printf("%i\n", consultar(tr,palabra));
 				break;
 			case '3' :
 				while (c!='\0'){
-					scanf("%c",c);
-					palabra[i++]=(char)c;
+					scanf("%c",&c);
+					palabra[i++]=c;
 				}
 				printf("%i\n", comienzan_con(tr,palabra));
 				break;
 			case '4' :
 				while (c!='\0'){
-					scanf("%c",c);
-					palabra[i++]=(char)c;
+					scanf("%c",&c);
+					palabra[i++]=c;
 				}
 				printf("%i\n", es_prefijo(tr,palabra));
 				break;
 			case '5' :
 				while (c!='\0'){
-					scanf("%c",c);
-					palabra[i++]=(char)c;
+					scanf("%c",&c);
+					palabra[i++]=c;
 				}
-				printf("%f\n", porcentaje(tr,palabra));
+				printf("%f", porcentaje(tr,palabra));
 				break;
 			default :
 				printf("No es una opcion valida");
 				break;
 		}
-		scanf("%i",&opcion);
+		scanf("%c",&opcion);
 	}
 	if (opcion=='6')
 		destruir(tr);
 	return 0;
 }
+
