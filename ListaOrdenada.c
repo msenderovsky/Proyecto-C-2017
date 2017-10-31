@@ -28,10 +28,8 @@ TListaOrdenada crear_lista_ordenada(int (*f) (void *, void *)){
 	return LOrdenada;
 }
 
-/**
- * Inserto un elemento pasado por parametro en la posicion que le corresponda
- * Si la lista esta vacia lo inserto en el principio
- */
+// Inserto un elemento pasado por parametro en la posicion que le corresponda
+// Si la lista esta vacia lo inserto en el principio
 int lo_insertar (TListaOrdenada lista, TElemento elem){
 
     int encontre=FALSE;
@@ -43,6 +41,7 @@ int lo_insertar (TListaOrdenada lista, TElemento elem){
     }
 	else{
         TPosicion muevo=lo_primera(lista);
+		// Si ya habia mas de un elemento adentro, inserto detras del que encontre
 		if (lista->cantidad_elementos>1)
 			while ((muevo!=lo_ultima(lista))&&(i==FALSE)){
 				if (comp(elem, muevo->elemento)<1){
@@ -53,6 +52,7 @@ int lo_insertar (TListaOrdenada lista, TElemento elem){
 				else
 					muevo=lo_siguiente(lista,muevo);
 			}
+		//Sino, si hay un solo elemento y el que voy a insertar es menor al que hay, inserto antes del primero
         else if (comp(elem, muevo->elemento)<1){
 				TCelda nuevacelda=(TCelda) malloc (sizeof (struct celda));
 				nuevacelda->elemento=elem;
@@ -61,7 +61,8 @@ int lo_insertar (TListaOrdenada lista, TElemento elem){
 				lista->cantidad_elementos++;
 				lista->lista->cantidad_elementos++;
 				encontre=TRUE;
-			}	
+			}
+		//Si no encontre aun, o la cantidad de elementos es uno pero el que me pasan es mayor, inserto al final
 		if ((i==FALSE)||((lista->cantidad_elementos==1)&&(comp(elem, muevo->proxima_celda->elemento)>1))){
             TCelda nuevacelda= (TCelda)malloc(sizeof(struct celda));
             nuevacelda->elemento=elem;
@@ -75,11 +76,9 @@ int lo_insertar (TListaOrdenada lista, TElemento elem){
 	return encontre;
 }
 
-/**
- * Elimino la posicion pasada por parametro de la lista, si es que se encuentra
- * Si la lista esta vacia retorna error de lista vacia
- * Si la posicion es nula, retorna error de posicion ivalida
- */
+// Elimino la posicion pasada por parametro de la lista, si es que se encuentra
+// Si la lista esta vacia retorna error de lista vacia
+// Si la posicion es nula, retorna error de posicion ivalida
 int lo_eliminar(TListaOrdenada lista, TPosicion pos){
 	int res;
 	if (pos==NULL)
@@ -94,9 +93,7 @@ int lo_eliminar(TListaOrdenada lista, TPosicion pos){
 	return res;
 }
 
-/**
- * Retorna el tamaño de la lista
- */
+// Retorna el tamaño de la lista
 int lo_size(TListaOrdenada lista)
 {
 	if(lista==NULL)
@@ -104,11 +101,9 @@ int lo_size(TListaOrdenada lista)
 	return lista->cantidad_elementos;
 }
 
-/**
- * Retorna el primer elemento de la lista
- * Si la lista esta vacia, retorna error de lista vacia
- * Si la lista no esta inicializada, retorna error de lista sin inicializar
- */
+// Retorna el primer elemento de la lista
+// Si la lista esta vacia, retorna error de lista vacia
+// Si la lista no esta inicializada, retorna error de lista sin inicializar
 TPosicion lo_primera(TListaOrdenada lista)
 {
 	if(lista==NULL)
@@ -120,7 +115,7 @@ TPosicion lo_primera(TListaOrdenada lista)
 
 // Retorna el ultimo elemento de la lista
 // Si la lista esta vacia, retorna error de lista vacia
-//Si la lista no esta inicializada, retorna error de lista sin inicializar
+// Si la lista no esta inicializada, retorna error de lista sin inicializar
 TPosicion lo_ultima(TListaOrdenada lista)
 {
 	if(lista==NULL)

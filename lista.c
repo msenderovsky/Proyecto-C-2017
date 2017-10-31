@@ -13,10 +13,10 @@
 #define ELE_NULO NULL
 
 
-//Retorna una nueva lista vacia.
+// Retorna una nueva lista vacia.
 TLista lista_crear() {
 
-    //Asigno la cantidad de memoria necesaria.
+   // Asigno la cantidad de memoria necesaria.
   TLista lista=(TLista) malloc(sizeof(struct lista));
   //Creo la lista.
     lista->cantidad_elementos=0;
@@ -25,13 +25,14 @@ TLista lista_crear() {
 
 }
 
-//Agrega el elemento elem en la posición anterior a pos, dentro de la lista.
+// Agrega el elemento elem en la posición anterior a pos, dentro de la lista.
 int l_insertar(TLista lista, TPosicion pos, TElemento elem){
 
     int encontre=FALSE;
     if (lista==NULL)
       exit(LST_NO_INI);
     else {
+		//Si esta vacia o la pos es nula, inserto al inicio
         if((pos==NULL)||(lista->cantidad_elementos==0)) {
             TCelda nuevacelda = malloc(sizeof(struct celda));
             nuevacelda->proxima_celda=lista->primer_celda;
@@ -42,6 +43,7 @@ int l_insertar(TLista lista, TPosicion pos, TElemento elem){
         }
         else{
             TPosicion muevo=l_primera(lista);
+			//Sino, busco donde debo insertar
             while (encontre==FALSE){
                 if (muevo==pos){
                     TCelda nuevacelda = malloc(sizeof(struct celda));
@@ -62,8 +64,8 @@ int l_insertar(TLista lista, TPosicion pos, TElemento elem){
     return encontre;
 }
 
-//Elimina un elemento de la lista segun la posicion pasada como parametro
-//Si la posicion pasada nula, finaliza la ejecucion con error LST_POS_INV
+// Elimina un elemento de la lista segun la posicion pasada como parametro
+// Si la posicion pasada nula, finaliza la ejecucion con error POS_NUL
 int l_eliminar(TLista lista, TPosicion pos){
 
     int encontre=FALSE;
@@ -73,12 +75,14 @@ int l_eliminar(TLista lista, TPosicion pos){
         exit(LST_VAC);
     else {
         TPosicion a_eliminar=l_primera(lista);
+		//Si el que quiero borrar es el primero, debo reasignar el primero al su siguiente
         if (pos==l_primera(lista)){
 			lista->primer_celda=l_siguiente(lista,pos);
 			lista->cantidad_elementos--;
 			free(pos);
 			encontre==TRUE;
 		}
+		//Sino, recorro y borro al encontrarlo
 		else while (encontre==FALSE){
 				if(a_eliminar==pos){
 					TPosicion celdaaux = l_anterior(lista,a_eliminar);
