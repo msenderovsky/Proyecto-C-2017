@@ -34,7 +34,7 @@ TListaOrdenada crear_lista_ordenada(int (*f) (void *, void *)){
  */
 int lo_insertar (TListaOrdenada lista, TElemento elem){
 
-    int i=FALSE;
+    int encontre=FALSE;
 	if (lista==NULL)
 		exit((int)LST_POS_INV);
 	if (lista->cantidad_elementos==0){
@@ -43,25 +43,36 @@ int lo_insertar (TListaOrdenada lista, TElemento elem){
     }
 	else{
         TPosicion muevo=lo_primera(lista);
-		while ((muevo!=lo_ultima(lista))&&(i==FALSE)){
-            if (comp(elem, muevo->proxima_celda->elemento)<1){
-                l_insertar(lista->lista,muevo->proxima_celda,elem);
-                lista->cantidad_elementos++;
-                i=TRUE;
-            }
-            else
-                muevo=lo_siguiente(lista,muevo);
-        }
-        if (i==FALSE){
+		if (lista->cantidad_elementos>1)
+			while ((muevo!=lo_ultima(lista))&&(i==FALSE)){
+				if (comp(elem, muevo->elemento)<1){
+					l_insertar(lista->lista,muevo,elem);
+					lista->cantidad_elementos++;
+					i=TRUE;
+				}
+				else
+					muevo=lo_siguiente(lista,muevo);
+			}
+        else if (comp(elem, muevo->elemento)<1){
+				TCelda nuevacelda=(TCelda) malloc (sizeof (struct celda));
+				nuevacelda->elemento=elem;
+				nuevacelda->proxima_celda=lo_primera(lista);
+				lista->lista->primer_celda=nuevacelda;
+				lista->cantidad_elementos++;
+				lista->lista->cantidad_elementos++;
+				encontre=TRUE;
+			}	
+		if ((i==FALSE)||((lista->cantidad_elementos==1)&&(comp(elem, muevo->proxima_celda->elemento)>1))){
             TCelda nuevacelda= (TCelda)malloc(sizeof(struct celda));
             nuevacelda->elemento=elem;
             l_ultima(lista->lista)->proxima_celda=nuevacelda;
             nuevacelda->proxima_celda=NULL;
             lista->cantidad_elementos++;
             lista->lista->cantidad_elementos++;
+			encontre=TRUE;
         }
 	}
-	return i;
+	return encontre;
 }
 
 /**
@@ -71,11 +82,11 @@ int lo_insertar (TListaOrdenada lista, TElemento elem){
  */
 int lo_eliminar(TListaOrdenada lista, TPosicion pos){
 	int res;
-	if(lista->cantidad_elementos==0)
-		exit(LST_VAC);
 	if (pos==NULL)
 		res=FALSE;
-    else{
+    if(lista->cantidad_elementos==0)
+		exit(LST_VAC);
+	else{
         l_eliminar(lista->lista,pos);
         lista->cantidad_elementos--;
         res=TRUE;
